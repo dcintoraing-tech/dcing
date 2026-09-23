@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Plantilla de variables: no lleva secretos y sí debe subirse.
+!.env.example

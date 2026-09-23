@@ -1,7 +1,8 @@
+import Link from "next/link";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { Wordmark } from "@/components/ui/Logo";
 import { Reveal } from "@/components/ui/Reveal";
-import { mailto, navLinks, site } from "@/lib/site";
+import { mailto, navLinks, rutaCotizar, site } from "@/lib/site";
 
 export function Contact() {
   const year = new Date().getFullYear();
@@ -36,7 +37,7 @@ export function Contact() {
 
         <Reveal delay={0.16}>
           <div className="mt-10">
-            <ButtonLink href={mailto} variant="inverse" size="lg" arrow>
+            <ButtonLink href={rutaCotizar} variant="inverse" size="lg" arrow>
               Hablemos de tu proyecto
             </ButtonLink>
           </div>
@@ -57,13 +58,13 @@ export function Contact() {
 
         <nav aria-label="Pie de página" className="flex flex-wrap gap-5">
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.href}
               href={link.href}
               className="label-mono text-on-contrast/35 transition-colors duration-300 hover:text-on-contrast/70"
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </nav>
 

@@ -1,12 +1,13 @@
 "use client";
 
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
+import Link from "next/link";
 import { useState } from "react";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { Wordmark } from "@/components/ui/Logo";
 import { ThemeSwitch } from "@/components/ui/ThemeSwitch";
 import { EASE } from "@/lib/motion";
-import { mailto, navLinks } from "@/lib/site";
+import { navLinks, rutaCotizar } from "@/lib/site";
 
 export function Nav() {
   const { scrollY } = useScroll();
@@ -33,29 +34,29 @@ export function Nav() {
             : "border-transparent bg-transparent",
         ].join(" ")}
       >
-        <a
-          href="#top"
+        <Link
+          href="/"
           className="flex items-center rounded-full text-[15px] text-ink transition-opacity duration-300 hover:opacity-70"
         >
           <Wordmark />
           <span className="sr-only">Inicio</span>
-        </a>
+        </Link>
 
         <div className="hidden items-center gap-0.5 md:flex">
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.href}
               href={link.href}
               className="rounded-full px-4 py-2 text-[13.5px] text-ink/55 transition-colors duration-300 hover:bg-ink/[0.04] hover:text-ink"
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </div>
 
         <div className="flex items-center gap-2.5 sm:gap-3">
           <ThemeSwitch />
-          <ButtonLink href={mailto} size="sm">
+          <ButtonLink href={rutaCotizar} size="sm">
             Hablemos
           </ButtonLink>
         </div>

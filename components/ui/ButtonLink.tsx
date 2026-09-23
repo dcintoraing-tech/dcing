@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 
 type Variant = "primary" | "ghost" | "inverse";
@@ -30,12 +31,17 @@ export function ButtonLink({
   size = "md",
   arrow = false,
   className = "",
+  href = "",
   children,
   ...props
 }: ButtonLinkProps) {
+  // Las rutas internas navegan con Link; los anclas y mailto siguen siendo <a>.
+  const Etiqueta = href.startsWith("/") ? Link : "a";
+
   return (
-    <a
+    <Etiqueta
       {...props}
+      href={href}
       className={[
         "group/btn inline-flex items-center justify-center gap-2 rounded-full font-medium tracking-[-0.01em] whitespace-nowrap transition-all duration-500 ease-premium",
         variants[variant],
@@ -54,6 +60,6 @@ export function ButtonLink({
           →
         </span>
       ) : null}
-    </a>
+    </Etiqueta>
   );
 }

@@ -25,10 +25,19 @@ export const mailto = `mailto:${site.email}?subject=${encodeURIComponent(
   "Nuevo proyecto — DCing",
 )}`;
 
+/** Ruta del formulario público de cotización. */
+export const rutaCotizar = "/cotizar";
+
+/** Enlace permanente a una cotización, el que recibe el cliente. */
+export function urlCotizacion(token: string) {
+  return `${site.url}/cotizacion/${token}`;
+}
+
+// Con "/" delante funcionan igual desde la home que desde /cotizar.
 export const navLinks = [
-  { label: "Servicios", href: "#servicios" },
-  { label: "Proceso", href: "#proceso" },
-  { label: "Proyectos", href: "#proyectos" },
+  { label: "Servicios", href: "/#servicios" },
+  { label: "Proceso", href: "/#proceso" },
+  { label: "Proyectos", href: "/#proyectos" },
 ] as const;
 
 export type ServiceId = "dev" | "auto" | "data" | "ai" | "saas";

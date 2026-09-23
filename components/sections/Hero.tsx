@@ -5,7 +5,7 @@ import { HeroCanvas } from "@/components/three/HeroCanvas";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { EASE } from "@/lib/motion";
 import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
-import { mailto, site } from "@/lib/site";
+import { rutaCotizar, site } from "@/lib/site";
 
 const LETTERS = site.name.split("");
 
@@ -112,7 +112,7 @@ export function Hero() {
           transition={{ duration: 1, delay: 0.88, ease: EASE }}
           className="mt-10 flex flex-col items-center gap-3 sm:flex-row"
         >
-          <ButtonLink href={mailto} size="lg">
+          <ButtonLink href={rutaCotizar} size="lg">
             Hablemos
           </ButtonLink>
           <ButtonLink href="#proyectos" variant="ghost" size="lg">
