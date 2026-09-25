@@ -3,7 +3,7 @@
 import { headers } from "next/headers";
 import { after } from "next/server";
 import { avisarInterno, correoConfigurado, enviarAcuse } from "@/lib/email/send";
-import { MODELO, generarCotizacion, iaConfigurada } from "@/lib/quotes/generate";
+import { generarCotizacion } from "@/lib/quotes/generate";
 import {
   crearSolicitud,
   guardarCotizacion,
@@ -43,18 +43,16 @@ function procesarEnSegundoPlano(solicitud: Solicitud) {
       }
     }
 
-    if (!iaConfigurada()) return;
-
     try {
       await marcarEstado(solicitud.id, "generando");
-      const ia = await generarCotizacion({
+      const { cotizacion, modelo } = await generarCotizacion({
         nombre: solicitud.nombre,
         empresa: solicitud.empresa,
         servicio: solicitud.servicio,
         servicioOtro: solicitud.servicio_otro,
         descripcion: solicitud.descripcion,
       });
-      await guardarCotizacion(solicitud.id, ia, MODELO);
+      await guardarCotizacion(solicitud.id, cotizacion, modelo);
       await marcarEstado(solicitud.id, "borrador", null);
     } catch (error) {
       const mensaje = error instanceof Error ? error.message : String(error);

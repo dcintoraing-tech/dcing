@@ -179,8 +179,8 @@ export default async function SolicitudPage({ params }: { params: Promise<{ id: 
               Todavía no hay cotización para esta solicitud.
             </p>
             <p className="mt-2.5 text-[13.5px] leading-relaxed text-ink/45">
-              Usa &quot;Generar cotización&quot; para que la IA prepare un borrador. Podrás
-              revisarlo y editarlo antes de que salga al cliente.
+              Usa &quot;Generar borrador&quot; para armar una propuesta desde la tarifa. Podrás
+              revisarla y editarla antes de que salga al cliente.
             </p>
           </div>
         </Window>

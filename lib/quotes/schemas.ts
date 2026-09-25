@@ -67,3 +67,12 @@ export const cotizacionEditSchema = z.object({
   condiciones: z.array(z.string().trim().min(1)).max(20),
   notas: z.string().trim().max(2000),
 });
+
+/** Lo que necesita un generador de cotizaciones, venga de la IA o de plantilla. */
+export type DatosSolicitud = {
+  nombre: string;
+  empresa?: string | null;
+  servicio: string;
+  servicioOtro?: string | null;
+  descripcion: string;
+};

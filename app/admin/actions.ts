@@ -10,7 +10,7 @@ import {
   passwordCorrecta,
 } from "@/lib/admin/auth";
 import { correoConfigurado, enviarCotizacion } from "@/lib/email/send";
-import { MODELO, generarCotizacion, iaConfigurada } from "@/lib/quotes/generate";
+import { generarCotizacion } from "@/lib/quotes/generate";
 import {
   actualizarCotizacion,
   guardarCotizacion,
@@ -60,8 +60,6 @@ export async function regenerar(
 ): Promise<EstadoPanel> {
   await puerta();
 
-  if (!iaConfigurada()) return { error: "Falta ANTHROPIC_API_KEY." };
-
   const solicitudId = String(formData.get("solicitudId") ?? "");
   const registro = await obtenerSolicitud(solicitudId);
   if (!registro) return { error: "Solicitud no encontrada." };
@@ -70,14 +68,14 @@ export async function regenerar(
 
   try {
     await marcarEstado(solicitud.id, "generando");
-    const ia = await generarCotizacion({
+    const { cotizacion, modelo } = await generarCotizacion({
       nombre: solicitud.nombre,
       empresa: solicitud.empresa,
       servicio: solicitud.servicio,
       servicioOtro: solicitud.servicio_otro,
       descripcion: solicitud.descripcion,
     });
-    const nueva = await guardarCotizacion(solicitud.id, ia, MODELO);
+    const nueva = await guardarCotizacion(solicitud.id, cotizacion, modelo);
     await marcarEstado(solicitud.id, "borrador", null);
 
     revalidatePath("/admin");

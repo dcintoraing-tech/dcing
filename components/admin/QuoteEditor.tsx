@@ -81,7 +81,7 @@ export function QuoteEditor({
 
         {cotizacion.preguntas.length > 0 ? (
           <div className="rounded-xl border border-line bg-mist px-4 py-3.5">
-            <p className="label-mono mb-2 text-ink/40">Dudas de la IA</p>
+            <p className="label-mono mb-2 text-ink/40">Puntos por confirmar</p>
             <ul className="flex flex-col gap-1.5">
               {cotizacion.preguntas.map((pregunta) => (
                 <li key={pregunta} className="text-[13px] leading-relaxed text-ink/60">
