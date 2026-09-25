@@ -12,6 +12,7 @@ import {
   type Solicitud,
 } from "@/lib/quotes/repo";
 import { solicitudSchema } from "@/lib/quotes/schemas";
+import { site } from "@/lib/site";
 
 export type EstadoFormulario = {
   ok: boolean;
@@ -103,7 +104,7 @@ export async function enviarSolicitud(
       return {
         ok: false,
         mensaje:
-          "Ya recibimos varias solicitudes tuyas en la última hora. Escríbenos directo a hola@dcing.com y lo vemos ahí.",
+          `Ya recibimos varias solicitudes tuyas en la última hora. Escríbenos directo a ${site.email} y lo vemos ahí.`,
       };
     }
 
@@ -127,7 +128,7 @@ export async function enviarSolicitud(
     return {
       ok: false,
       mensaje:
-        "No pudimos registrar tu solicitud. Inténtalo de nuevo en un momento o escríbenos a hola@dcing.com.",
+        `No pudimos registrar tu solicitud. Inténtalo de nuevo en un momento o escríbenos a ${site.email}.`,
     };
   }
 }

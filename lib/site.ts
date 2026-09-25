@@ -14,7 +14,9 @@ function resolveSiteUrl() {
 export const site = {
   name: "DCing",
   url: resolveSiteUrl(),
-  email: "hola@dcing.com",
+  email: "dcintora.ing@gmail.com",
+  /** Celular de contacto, en nacional para mostrar y sin signos para wa.me. */
+  celular: "55 4844 5514",
   tagline: "Transformamos negocios en sistemas digitales.",
   subline: "Diseño + ingeniería + automatización.",
   description:
