@@ -66,6 +66,12 @@ export function Contact() {
               {link.label}
             </Link>
           ))}
+          <Link
+            href="/privacidad"
+            className="label-mono text-on-contrast/35 transition-colors duration-300 hover:text-on-contrast/70"
+          >
+            Privacidad
+          </Link>
         </nav>
 
         <p className="label-mono text-on-contrast/25">

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { useActionState, useId, useState } from "react";
 import { enviarSolicitud, type EstadoFormulario } from "@/app/cotizar/actions";
 import { Window } from "@/components/ui/Window";
@@ -221,7 +222,15 @@ export function QuoteForm() {
 
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="max-w-xs text-[12.5px] leading-relaxed text-ink/35">
-            Recibirás una estimación, no un precio cerrado. El costo final se define contigo.
+            Recibirás una estimación, no un precio cerrado. El costo final se define contigo. Al
+            enviar aceptas el{" "}
+            <Link
+              href="/privacidad"
+              className="text-ink/60 underline underline-offset-2 transition-colors duration-300 hover:text-ink"
+            >
+              aviso de privacidad
+            </Link>
+            .
           </p>
 
           <button
