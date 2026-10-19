@@ -2,20 +2,33 @@ type LogoProps = {
   className?: string;
 };
 
-/** Abstract mark: a square (design) and a circle (engineering) sharing an overlap. */
+/**
+ * Monograma "d" de DCing, redibujado en vectores a partir del logo original.
+ * Geometría tomada del archivo maestro: círculo de radio 291 centrado en
+ * (291, 515) y asta de 179 × 806 desde x = 515. Ambas cierran exactamente en
+ * el baseline, y el asta muerde el círculo igual que en el original.
+ *
+ * Usa currentColor a propósito: así el logo se invierte solo entre tema claro
+ * y oscuro sin necesidad de dos archivos.
+ */
 export function LogoMark({ className = "" }: LogoProps) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
-      <rect x="2" y="4.5" width="12.5" height="15" rx="4.2" fill="currentColor" fillOpacity="0.92" />
-      <circle cx="16" cy="12" r="6" fill="currentColor" fillOpacity="0.38" />
+    <svg
+      viewBox="0 0 694 806"
+      fill="currentColor"
+      className={className}
+      aria-hidden="true"
+    >
+      <circle cx="291" cy="515" r="291" />
+      <rect x="515" y="0" width="179" height="806" />
     </svg>
   );
 }
 
 export function Wordmark({ className = "" }: LogoProps) {
   return (
-    <span className={`inline-flex items-center gap-2 ${className}`}>
-      <LogoMark className="h-[1.15em] w-[1.15em]" />
+    <span className={`inline-flex items-center gap-[0.5em] ${className}`}>
+      <LogoMark className="h-[1.05em] w-auto" />
       <span className="font-medium tracking-[-0.035em]">DCing</span>
     </span>
   );

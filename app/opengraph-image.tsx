@@ -30,7 +30,29 @@ export default function OpenGraphImage() {
             color: "#8b8b93",
           }}
         >
-          <div style={{ width: "26px", height: "26px", borderRadius: "9px", background: "#0a0a0b" }} />
+          <div style={{ position: "relative", display: "flex", width: "26px", height: "30px" }}>
+            <div
+              style={{
+                position: "absolute",
+                left: 0,
+                top: "8.3px",
+                width: "21.7px",
+                height: "21.7px",
+                borderRadius: "50%",
+                background: "#0a0a0b",
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                left: "19.2px",
+                top: 0,
+                width: "6.7px",
+                height: "30px",
+                background: "#0a0a0b",
+              }}
+            />
+          </div>
           DISEÑO + INGENIERÍA + AUTOMATIZACIÓN
         </div>
 
@@ -68,7 +90,7 @@ export default function OpenGraphImage() {
             color: "#a1a1aa",
           }}
         >
-          DCING.COM
+          {new URL(site.url).host.toUpperCase()}
         </div>
       </div>
     ),
