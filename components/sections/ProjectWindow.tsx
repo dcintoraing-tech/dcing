@@ -3,7 +3,7 @@
 import { motion, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion";
 import type { PointerEvent } from "react";
 import { useRef } from "react";
-import { MOCKUPS } from "@/components/mockups";
+import { SitePreview } from "@/components/sections/SitePreview";
 import { AddressPill, Window } from "@/components/ui/Window";
 import { EASE } from "@/lib/motion";
 import type { projects } from "@/lib/site";
@@ -14,7 +14,6 @@ type Project = (typeof projects)[number];
 export function ProjectWindow({ project, index }: { project: Project; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotionSafe();
-  const Mockup = MOCKUPS[project.id];
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const drift = index % 2 === 0 ? 54 : 34;
@@ -57,28 +56,43 @@ export function ProjectWindow({ project, index }: { project: Project; index: num
         onPointerMove={handlePointerMove}
         onPointerLeave={resetTilt}
       >
-        <Window
-          hoverable
-          label={<AddressPill>{project.domain}</AddressPill>}
-          actions={<span className="label-mono text-ink/25">{project.year}</span>}
+        <a
+          href={project.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block rounded-[18px] sm:rounded-[22px]"
+          aria-label={`Abrir ${project.name} en una pestaña nueva`}
         >
-          {/* Portrait crop on phones keeps the interface legible instead of shrinking it away. */}
-          <div className="relative aspect-4/5 overflow-hidden bg-surface sm:aspect-3/2 md:aspect-[1200/750]">
-            <Mockup />
-          </div>
-
-          <div className="flex flex-col gap-3 border-t border-line px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-            <div className="flex items-center gap-4">
-              <h3 className="text-[17px] font-medium tracking-[-0.02em] sm:text-lg">
-                {project.name}
-              </h3>
-              <span className="label-mono text-ink/30">{project.category}</span>
+          <Window
+            hoverable
+            label={<AddressPill>{project.domain}</AddressPill>}
+            actions={
+              <span className="label-mono flex items-center gap-1.5 text-ink/25 transition-colors duration-500 group-hover:text-ink/55">
+                En vivo
+                <span aria-hidden="true" className="text-[13px] leading-none">
+                  ↗
+                </span>
+              </span>
+            }
+          >
+            {/* Recorte vertical en celular: así la interfaz se lee en vez de encogerse. */}
+            <div className="relative aspect-4/5 overflow-hidden bg-surface sm:aspect-3/2 md:aspect-[1200/750]">
+              <SitePreview url={project.url} nombre={project.name} />
             </div>
-            <p className="text-[13.5px] leading-relaxed text-ink/45 sm:text-right">
-              {project.description}
-            </p>
-          </div>
-        </Window>
+
+            <div className="flex flex-col gap-3 border-t border-line px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+              <div className="flex items-center gap-4">
+                <h3 className="text-[17px] font-medium tracking-[-0.02em] sm:text-lg">
+                  {project.name}
+                </h3>
+                <span className="label-mono text-ink/30">{project.category}</span>
+              </div>
+              <p className="text-[13.5px] leading-relaxed text-ink/45 sm:text-right">
+                {project.description}
+              </p>
+            </div>
+          </Window>
+        </a>
       </motion.div>
     </motion.div>
   );

@@ -134,46 +134,51 @@ export const steps: {
   },
 ];
 
-export type ProjectId = "meridian" | "atlas" | "kora" | "nucleo";
+export type ProjectId = "arqo" | "fuego-lento" | "casa-filo" | "margen";
 
+/**
+ * Trabajos reales, con su sitio en vivo. La vista previa de la sección los
+ * carga en un iframe, así que `url` tiene que ser la página que mejor
+ * represente el proyecto, no necesariamente la raíz.
+ */
 export const projects: {
   id: ProjectId;
   name: string;
   category: string;
   description: string;
   domain: string;
-  year: string;
+  url: string;
 }[] = [
   {
-    id: "meridian",
-    name: "Meridian",
-    category: "Plataforma SaaS",
-    description: "Operación financiera unificada para equipos distribuidos.",
-    domain: "meridian.app",
-    year: "2025",
+    id: "arqo",
+    name: "ARQO",
+    category: "Sitio corporativo",
+    description: "Estudio de ingeniería de producto con métricas de operación en vivo.",
+    domain: "arqo-murex.vercel.app",
+    url: "https://arqo-murex.vercel.app/",
   },
   {
-    id: "atlas",
-    name: "Atlas",
-    category: "Automatización",
-    description: "Motor de flujos que conecta catorce sistemas internos.",
-    domain: "atlas.systems",
-    year: "2025",
+    id: "fuego-lento",
+    name: "Fuego Lento",
+    category: "Restaurante",
+    description: "Pizzería de horno de leña: carta por categorías y pedido en línea.",
+    domain: "fuego-lento-rho.vercel.app",
+    url: "https://fuego-lento-rho.vercel.app/",
   },
   {
-    id: "kora",
-    name: "Kora",
+    id: "casa-filo",
+    name: "Casa Filo",
+    category: "Agenda de citas",
+    description: "Barbería de autor en Guadalajara, con reserva de silla y horarios.",
+    domain: "casa-filo.vercel.app",
+    url: "https://casa-filo.vercel.app/",
+  },
+  {
+    id: "margen",
+    name: "MARGEN",
     category: "Comercio digital",
-    description: "Tienda y catálogo con inventario en tiempo real.",
-    domain: "kora.store",
-    year: "2024",
-  },
-  {
-    id: "nucleo",
-    name: "Núcleo",
-    category: "Datos & BI",
-    description: "Centro de análisis para decisiones diarias.",
-    domain: "nucleo.bi",
-    year: "2024",
+    description: "Tienda de ropa por drops, con filtros de talla, color e inventario real.",
+    domain: "urbanm.vercel.app",
+    url: "https://urbanm.vercel.app/tienda",
   },
 ];

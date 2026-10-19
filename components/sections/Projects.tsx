@@ -15,7 +15,7 @@ export function Projects() {
               están funcionando.
             </>
           }
-          description="Cuatro productos, una misma manera de construir."
+          description="Cuatro sitios en producción, corriendo aquí mismo. Toca cualquiera para abrirlo."
         />
 
         <div className="mt-16 flex flex-col gap-20 sm:gap-24 lg:gap-28">
