@@ -1,13 +1,12 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
+import { HeroLogo } from "@/components/sections/HeroLogo";
 import { HeroCanvas } from "@/components/three/HeroCanvas";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { EASE } from "@/lib/motion";
 import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
 import { rutaCotizar, site } from "@/lib/site";
-
-const LETTERS = site.name.split("");
 
 export function Hero() {
   const reduce = useReducedMotionSafe();
@@ -55,52 +54,12 @@ export function Hero() {
           Firma de transformación digital
         </motion.span>
 
-        <h1 className="mt-8 flex flex-col items-center">
-          <span className="sr-only">
-            {site.name} — {site.tagline}
-          </span>
-
-          <motion.span
-            aria-hidden="true"
-            initial="hidden"
-            animate="show"
-            variants={{ show: { transition: { staggerChildren: 0.075, delayChildren: 0.2 } } }}
-            className="flex text-[clamp(4.2rem,15vw,11.5rem)] leading-[0.86] font-medium tracking-[-0.055em]"
-          >
-            {LETTERS.map((letter, i) => (
-              <motion.span
-                key={i}
-                variants={{
-                  hidden: { opacity: 0, y: "0.3em", filter: "blur(14px)" },
-                  show: {
-                    opacity: 1,
-                    y: 0,
-                    filter: "blur(0px)",
-                    transition: { duration: 1.2, ease: EASE },
-                  },
-                }}
-                className="inline-block"
-              >
-                {letter}
-              </motion.span>
-            ))}
-          </motion.span>
-
-          <motion.span
-            aria-hidden="true"
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.62, ease: EASE }}
-            className="mt-7 max-w-[19ch] text-[clamp(1.35rem,3.1vw,2.5rem)] leading-[1.1] font-normal tracking-[-0.032em] text-balance text-ink/90 sm:max-w-3xl"
-          >
-            {site.tagline}
-          </motion.span>
-        </h1>
+        <HeroLogo />
 
         <motion.p
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.76, ease: EASE }}
+          transition={{ duration: 1, delay: 2.05, ease: EASE }}
           className="mt-7 font-mono text-[9px] tracking-[0.13em] text-ink/40 uppercase sm:text-[11px] sm:tracking-[0.18em]"
         >
           {site.subline}
@@ -109,7 +68,7 @@ export function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.88, ease: EASE }}
+          transition={{ duration: 1, delay: 2.2, ease: EASE }}
           className="mt-10 flex flex-col items-center gap-3 sm:flex-row"
         >
           <ButtonLink href={rutaCotizar} size="lg">
