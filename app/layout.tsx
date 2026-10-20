@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { AnimatedFavicon } from "@/components/ui/AnimatedFavicon";
 import { MotionProvider } from "@/components/ui/MotionProvider";
 import { site } from "@/lib/site";
 import "./globals.css";
@@ -81,6 +82,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Saltar al contenido
         </a>
+        <AnimatedFavicon />
         <MotionProvider>{children}</MotionProvider>
       </body>
     </html>
