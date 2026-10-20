@@ -72,7 +72,7 @@ export function QuoteForm() {
               </svg>
             </span>
 
-            <h2 className="mt-7 text-[clamp(1.5rem,3.2vw,2rem)] leading-tight font-medium tracking-[-0.03em]">
+            <h2 className="display mt-7 text-[clamp(1.7rem,3.4vw,2.2rem)] leading-tight">
               Recibimos tu solicitud.
             </h2>
             <p className="mt-4 max-w-md text-[15px] leading-relaxed text-ink/50">

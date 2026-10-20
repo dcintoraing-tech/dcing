@@ -35,7 +35,7 @@ export default function CotizarPage() {
           </Reveal>
 
           <Reveal delay={0.08}>
-            <h1 className="mt-5 text-[clamp(2rem,5vw,3.4rem)] leading-[1.05] font-medium tracking-[-0.035em] text-balance">
+            <h1 className="display mt-5 text-[clamp(2.2rem,5.4vw,3.8rem)] leading-[1.04] text-balance">
               Cuéntanos qué necesitas.
             </h1>
           </Reveal>

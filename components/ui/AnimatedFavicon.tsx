@@ -39,7 +39,7 @@ function tramo(ahora: number, inicio: number, duracion: number) {
 function dibuja(ctx: CanvasRenderingContext2D, ahora: number) {
   ctx.clearRect(0, 0, LADO, LADO);
 
-  ctx.fillStyle = "#0a0a0b";
+  ctx.fillStyle = "#141413";
   ctx.beginPath();
   if (typeof ctx.roundRect === "function") {
     ctx.roundRect(0, 0, LADO, LADO, 16);
@@ -51,8 +51,8 @@ function dibuja(ctx: CanvasRenderingContext2D, ahora: number) {
   ctx.save();
   ctx.translate(DESPLAZA_X, DESPLAZA_Y);
   ctx.scale(ESCALA, ESCALA);
-  ctx.fillStyle = "#ffffff";
-  ctx.strokeStyle = "#ffffff";
+  ctx.fillStyle = "#faf9f5";
+  ctx.strokeStyle = "#faf9f5";
 
   const a = tramo(ahora, ANILLO.inicio, ANILLO.duracion);
   const radio = ARO.r + (DISCO.r - ARO.r) * a;

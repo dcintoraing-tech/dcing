@@ -30,14 +30,14 @@ export function Contact() {
         </Reveal>
 
         <Reveal delay={0.08}>
-          <h2 className="mt-7 text-[clamp(2.1rem,6vw,4.2rem)] leading-[1.02] font-medium tracking-[-0.042em] text-balance">
+          <h2 className="display mt-7 text-[clamp(2.3rem,6.4vw,4.6rem)] leading-[1.02] text-balance">
             ¿Listo para transformar tu negocio?
           </h2>
         </Reveal>
 
         <Reveal delay={0.16}>
           <div className="mt-10">
-            <ButtonLink href={rutaCotizar} variant="inverse" size="lg" arrow>
+            <ButtonLink href={rutaCotizar} variant="inverse" size="lg" arrow magnetic>
               Hablemos de tu proyecto
             </ButtonLink>
           </div>

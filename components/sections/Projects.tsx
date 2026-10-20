@@ -8,13 +8,7 @@ export function Projects() {
       <div className="mx-auto max-w-5xl">
         <SectionHeading
           label="Proyectos"
-          title={
-            <>
-              Sistemas que ya
-              <br />
-              están funcionando.
-            </>
-          }
+          lines={["Sistemas que ya", "están funcionando."]}
           description="Cuatro sitios en producción, corriendo aquí mismo. Toca cualquiera para abrirlo."
         />
 

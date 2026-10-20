@@ -25,7 +25,7 @@ function Seccion({
   return (
     <section className="border-t border-line pt-8">
       <span className="label-mono text-ink/30">{numero}</span>
-      <h2 className="mt-3 text-[clamp(1.15rem,2.2vw,1.45rem)] leading-tight font-medium tracking-[-0.025em]">
+      <h2 className="display mt-3 text-[clamp(1.3rem,2.4vw,1.65rem)] leading-tight">
         {titulo}
       </h2>
       <div className="mt-4 flex flex-col gap-4 text-[14.5px] leading-relaxed text-ink/60">
@@ -67,7 +67,7 @@ export default function PrivacidadPage() {
           </Reveal>
 
           <Reveal delay={0.08}>
-            <h1 className="mt-5 text-[clamp(2rem,4.6vw,3rem)] leading-[1.05] font-medium tracking-[-0.035em] text-balance">
+            <h1 className="display mt-5 text-[clamp(2.2rem,5vw,3.4rem)] leading-[1.04] text-balance">
               Aviso de privacidad.
             </h1>
           </Reveal>

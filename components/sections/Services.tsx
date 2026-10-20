@@ -24,13 +24,7 @@ export function Services() {
       <div className="mx-auto max-w-6xl">
         <SectionHeading
           label="Servicios"
-          title={
-            <>
-              Cinco piezas.
-              <br />
-              Un mismo sistema.
-            </>
-          }
+          lines={["Cinco piezas.", "Un mismo sistema."]}
           description="Cada capa se diseña para conectarse con la siguiente."
         />
 

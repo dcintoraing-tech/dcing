@@ -71,7 +71,7 @@ export function Hero() {
           transition={{ duration: 1, delay: 2.2, ease: EASE }}
           className="mt-10 flex flex-col items-center gap-3 sm:flex-row"
         >
-          <ButtonLink href={rutaCotizar} size="lg">
+          <ButtonLink href={rutaCotizar} size="lg" magnetic>
             Hablemos
           </ButtonLink>
           <ButtonLink href="#proyectos" variant="ghost" size="lg">

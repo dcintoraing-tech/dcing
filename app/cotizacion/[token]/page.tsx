@@ -66,7 +66,7 @@ export default async function CotizacionPage({ params }: { params: Promise<{ tok
           <Window label={`cotización · v${cotizacion.version}`}>
             <div className="px-6 py-9 sm:px-10 sm:py-11">
               <span className="label-mono text-ink/35">Cotización estimada</span>
-              <h1 className="mt-5 text-[clamp(1.8rem,4.4vw,2.9rem)] leading-[1.08] font-medium tracking-[-0.035em] text-balance">
+              <h1 className="display mt-5 text-[clamp(2rem,4.8vw,3.2rem)] leading-[1.06] text-balance">
                 {cotizacion.titulo}
               </h1>
               <p className="mt-5 text-[15px] leading-relaxed text-ink/55">{cotizacion.resumen}</p>

@@ -16,8 +16,8 @@ export default function OpenGraphImage() {
           flexDirection: "column",
           justifyContent: "center",
           padding: "88px",
-          background: "#ffffff",
-          color: "#0a0a0b",
+          background: "#faf9f5",
+          color: "#141413",
         }}
       >
         <div
@@ -27,7 +27,7 @@ export default function OpenGraphImage() {
             gap: "18px",
             fontSize: "20px",
             letterSpacing: "4px",
-            color: "#8b8b93",
+            color: "#8b877b",
           }}
         >
           <div style={{ position: "relative", display: "flex", width: "26px", height: "30px" }}>
@@ -39,7 +39,7 @@ export default function OpenGraphImage() {
                 width: "21.7px",
                 height: "21.7px",
                 borderRadius: "50%",
-                background: "#0a0a0b",
+                background: "#141413",
               }}
             />
             <div
@@ -49,7 +49,7 @@ export default function OpenGraphImage() {
                 top: 0,
                 width: "6.7px",
                 height: "30px",
-                background: "#0a0a0b",
+                background: "#141413",
               }}
             />
           </div>
@@ -75,7 +75,7 @@ export default function OpenGraphImage() {
             marginTop: "30px",
             fontSize: "42px",
             letterSpacing: "-1.5px",
-            color: "#3f3f46",
+            color: "#45443c",
           }}
         >
           {site.tagline}
@@ -87,7 +87,7 @@ export default function OpenGraphImage() {
             marginTop: "auto",
             fontSize: "22px",
             letterSpacing: "2px",
-            color: "#a1a1aa",
+            color: "#a8a497",
           }}
         >
           {new URL(site.url).host.toUpperCase()}

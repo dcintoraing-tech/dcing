@@ -31,13 +31,7 @@ export function Process() {
       <div className="relative mx-auto max-w-6xl px-5 pt-24 sm:pt-32 lg:pt-40">
         <SectionHeading
           label="Cómo trabajamos"
-          title={
-            <>
-              Un proceso.
-              <br />
-              Cinco estados.
-            </>
-          }
+          lines={["Un proceso.", "Cinco estados."]}
           description="Del mapa del negocio al sistema que lo sostiene."
         />
       </div>

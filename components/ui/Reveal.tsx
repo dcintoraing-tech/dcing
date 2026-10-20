@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";
 import { EASE, viewport } from "@/lib/motion";
+import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
 
 type RevealProps = {
   children: ReactNode;
@@ -32,16 +33,57 @@ export function Reveal({
   );
 }
 
+/**
+ * Titular que entra línea por línea desde detrás de una máscara.
+ *
+ * Cada línea lleva su propio recorte, y el relleno inferior existe para que
+ * la máscara caiga por debajo de las colas de las letras: sin él, una "g" o
+ * una "j" quedarían rebanadas al terminar. El margen negativo devuelve ese
+ * relleno para que la maquetación no cambie.
+ */
+export function RevealLines({
+  lines,
+  className = "",
+  delay = 0,
+}: {
+  lines: string[];
+  className?: string;
+  delay?: number;
+}) {
+  const reduce = useReducedMotionSafe();
+
+  return (
+    <span className={`block ${className}`}>
+      {lines.map((line, i) => (
+        <span key={line} className="block overflow-hidden pb-[0.16em] -mb-[0.16em]">
+          <motion.span
+            className="block"
+            initial={{ y: reduce ? "0%" : "115%" }}
+            whileInView={{ y: "0%" }}
+            viewport={viewport}
+            transition={
+              reduce ? { duration: 0 } : { duration: 1, delay: delay + i * 0.09, ease: EASE }
+            }
+          >
+            {line}
+          </motion.span>
+        </span>
+      ))}
+    </span>
+  );
+}
+
 type SectionHeadingProps = {
   label: string;
-  title: ReactNode;
+  /** Una entrada por línea: cada una se revela por separado. */
+  lines: string[];
   description?: string;
   className?: string;
 };
 
 export function SectionHeading({
   label,
-  title,
+  lines,
   description,
   className = "",
 }: SectionHeadingProps) {
@@ -54,11 +96,9 @@ export function SectionHeading({
         </span>
       </Reveal>
 
-      <Reveal delay={0.08}>
-        <h2 className="mt-5 max-w-3xl text-[clamp(2rem,4.6vw,3.4rem)] leading-[1.05] font-medium tracking-[-0.035em] text-balance text-ink">
-          {title}
-        </h2>
-      </Reveal>
+      <h2 className="display mt-5 max-w-3xl text-[clamp(2.2rem,5vw,3.8rem)] leading-[1.04] text-ink">
+        <RevealLines lines={lines} delay={0.06} />
+      </h2>
 
       {description ? (
         <Reveal delay={0.14}>

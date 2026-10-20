@@ -48,7 +48,7 @@ export function Transformation() {
               Transformación
             </motion.span>
 
-            <h2 className="text-[clamp(2.1rem,6.2vw,5rem)] leading-[1.02] font-medium tracking-[-0.042em] text-balance">
+            <h2 className="display text-[clamp(2.3rem,6.6vw,5.4rem)] leading-[1.02] text-balance">
               <motion.span style={{ opacity: firstOpacity, filter: firstBlur }} className="block">
                 De procesos complejos
               </motion.span>

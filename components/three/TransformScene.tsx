@@ -163,7 +163,7 @@ export default function TransformScene({
       <directionalLight position={[4, 7, 9]} intensity={dark ? 0.9 : 1.1} />
       <Lattice progress={progress} still={still} theme={theme} />
       <Environment key={theme} resolution={128}>
-        <color attach="background" args={[dark ? "#191920" : "#ededee"]} />
+        <color attach="background" args={[dark ? "#1f1f1b" : "#eceade"]} />
         <Lightformer intensity={dark ? 2.2 : 2.6} form="rect" position={[0, 6, -3]} scale={[14, 7, 1]} />
         <Lightformer
           intensity={dark ? 1.2 : 1.4}

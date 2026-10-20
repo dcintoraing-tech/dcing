@@ -143,7 +143,7 @@ export function HeroLogo() {
         initial={{ opacity: reduce ? 1 : 0, y: reduce ? 0 : 18 }}
         animate={{ opacity: 1, y: 0 }}
         transition={t(1, 1.95)}
-        className="mt-7 max-w-[19ch] text-[clamp(1.35rem,3.1vw,2.5rem)] leading-[1.1] font-normal tracking-[-0.032em] text-balance text-ink/90 sm:max-w-3xl"
+        className="display mt-7 max-w-[19ch] text-[clamp(1.5rem,3.4vw,2.7rem)] leading-[1.12] text-balance text-ink/90 sm:max-w-3xl"
       >
         {site.tagline}
       </motion.span>

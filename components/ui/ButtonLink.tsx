@@ -1,5 +1,9 @@
+"use client";
+
+import { motion, useMotionValue, useSpring } from "framer-motion";
 import Link from "next/link";
-import type { ComponentPropsWithoutRef, ReactNode } from "react";
+import type { ComponentPropsWithoutRef, PointerEvent, ReactNode } from "react";
+import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
 
 type Variant = "primary" | "ghost" | "inverse";
 type Size = "sm" | "md" | "lg";
@@ -8,6 +12,8 @@ type ButtonLinkProps = ComponentPropsWithoutRef<"a"> & {
   variant?: Variant;
   size?: Size;
   arrow?: boolean;
+  /** El botón se inclina hacia el cursor mientras lo tiene encima. */
+  magnetic?: boolean;
   children: ReactNode;
 };
 
@@ -30,6 +36,7 @@ export function ButtonLink({
   variant = "primary",
   size = "md",
   arrow = false,
+  magnetic = false,
   className = "",
   href = "",
   children,
@@ -37,29 +44,64 @@ export function ButtonLink({
 }: ButtonLinkProps) {
   // Las rutas internas navegan con Link; los anclas y mailto siguen siendo <a>.
   const Etiqueta = href.startsWith("/") ? Link : "a";
+  const reduce = useReducedMotionSafe();
+
+  const tiraX = useMotionValue(0);
+  const tiraY = useMotionValue(0);
+  const resorte = { stiffness: 260, damping: 18, mass: 0.5 };
+  const x = useSpring(tiraX, resorte);
+  const y = useSpring(tiraY, resorte);
+
+  const activo = magnetic && !reduce;
+
+  /*
+   * El desplazamiento lo lleva la envoltura, no el enlace: el propio botón ya
+   * usa transform en sus estados de hover, y pelearse con él por la misma
+   * propiedad daba saltos.
+   *
+   * Solo con ratón: en una pantalla táctil no hay cursor al que acercarse.
+   */
+  function seguir(evento: PointerEvent<HTMLSpanElement>) {
+    if (!activo || evento.pointerType !== "mouse") return;
+    const caja = evento.currentTarget.getBoundingClientRect();
+    tiraX.set((evento.clientX - (caja.left + caja.width / 2)) * 0.24);
+    tiraY.set((evento.clientY - (caja.top + caja.height / 2)) * 0.34);
+  }
+
+  function soltar() {
+    tiraX.set(0);
+    tiraY.set(0);
+  }
 
   return (
-    <Etiqueta
-      {...props}
-      href={href}
-      className={[
-        "group/btn inline-flex items-center justify-center gap-2 rounded-full font-medium tracking-[-0.01em] whitespace-nowrap transition-all duration-500 ease-premium",
-        variants[variant],
-        sizes[size],
-        className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
+    <motion.span
+      className="inline-flex"
+      style={activo ? { x, y } : undefined}
+      onPointerMove={activo ? seguir : undefined}
+      onPointerLeave={activo ? soltar : undefined}
     >
-      {children}
-      {arrow ? (
-        <span
-          aria-hidden="true"
-          className="translate-x-0 transition-transform duration-500 ease-premium group-hover/btn:translate-x-1"
-        >
-          →
-        </span>
-      ) : null}
-    </Etiqueta>
+      <Etiqueta
+        {...props}
+        href={href}
+        className={[
+          "group/btn inline-flex items-center justify-center gap-2 rounded-full font-medium tracking-[-0.01em] whitespace-nowrap transition-all duration-500 ease-premium",
+          variants[variant],
+          sizes[size],
+          className,
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
+        {children}
+        {arrow ? (
+          <span
+            aria-hidden="true"
+            className="translate-x-0 transition-transform duration-500 ease-premium group-hover/btn:translate-x-1"
+          >
+            →
+          </span>
+        ) : null}
+      </Etiqueta>
+    </motion.span>
   );
 }
