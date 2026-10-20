@@ -21,6 +21,9 @@ import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
  * izquierda: ese reacomodo es parte del efecto, no un salto de maquetación.
  */
 
+/** Cuándo abre la palabra y cuánto tarda, en segundos. */
+const APERTURA = { retraso: 1.25, duracion: 0.95 };
+
 /** Estado final del aro, el que lo vuelve disco sólido. */
 const DISCO = { r: 145.5, grosor: 291 };
 /** Estado inicial: aro amplio y fino, por fuera de donde acabará. */
@@ -30,6 +33,7 @@ export function HeroLogo() {
   const reduce = useReducedMotionSafe();
   const medidor = useRef<HTMLSpanElement>(null);
   const [ancho, setAncho] = useState(0);
+  const [cumplido, setCumplido] = useState(false);
 
   // El ancho natural de "Cing" cambia con el clamp tipográfico, así que se
   // mide en lugar de suponerse: es el destino de la animación de apertura.
@@ -44,6 +48,23 @@ export function HeroLogo() {
     observador.observe(nodo);
     return () => observador.disconnect();
   }, []);
+
+  /*
+   * El recorte se suelta por reloj y no con onAnimationComplete: el ancho
+   * arranca en 0 porque todavía no se ha medido, y esa animación de cero a
+   * cero termina de inmediato —ya con el ancho real en el closure—, así que
+   * el callback se disparaba antes de que la palabra empezara a abrirse.
+   */
+  useEffect(() => {
+    const reloj = setTimeout(
+      () => setCumplido(true),
+      (APERTURA.retraso + APERTURA.duracion) * 1000 + 80,
+    );
+    return () => clearTimeout(reloj);
+  }, []);
+
+  // Una vez abierta, la palabra deja de recortarse y vuelve a su ancho natural.
+  const abierta = reduce || cumplido;
 
   const t = (duration: number, delay: number) =>
     reduce ? { duration: 0 } : { duration, delay, ease: EASE };
@@ -92,9 +113,18 @@ export function HeroLogo() {
 
         <motion.span
           initial={{ width: reduce ? "auto" : 0 }}
-          animate={{ width: reduce ? "auto" : ancho }}
-          transition={t(0.95, 1.25)}
-          className="inline-block overflow-hidden"
+          animate={{ width: reduce || abierta ? "auto" : ancho }}
+          transition={t(APERTURA.duracion, APERTURA.retraso)}
+          className="inline-block"
+          style={{
+            /*
+             * No se usa overflow: recortaría también arriba y abajo, y con
+             * una interlínea de 0.82 la caja es más baja que las letras, así
+             * que la cola de la "g" quedaba cortada. El recorte va solo a los
+             * lados, con holgura vertical de sobra, y desaparece al terminar.
+             */
+            clipPath: reduce || abierta ? "none" : "inset(-60% 0 -60% 0)",
+          }}
         >
           <motion.span
             ref={medidor}
