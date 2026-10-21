@@ -52,35 +52,96 @@ export function QuoteForm() {
   const borde = (campo: string) => (errores[campo] ? "border-ink/40" : "border-line");
 
   if (estado?.ok) {
+    const est = estado.estimacion;
     return (
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: EASE }}
       >
-        <Window label="solicitud.enviada">
-          <div className="flex flex-col items-center px-6 py-16 text-center sm:px-10">
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-ink">
-              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
-                <path
-                  d="M5 12.5l4.5 4.5L19 7.5"
-                  stroke="var(--paper)"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </span>
+        <Window label={est ? `cotización · ${est.tiempo}` : "solicitud.enviada"}>
+          {est ? (
+            <>
+              {/* La estimación se enseña aquí mismo: esperar un correo para
+                  saber el precio es justo donde se pierde a la gente. */}
+              <div className="px-6 pt-10 pb-8 text-center sm:px-10">
+                <span className="label-mono text-ink/35">Tu cotización estimada</span>
+                <h2 className="display mt-5 text-[clamp(1.7rem,3.6vw,2.4rem)] leading-tight text-balance">
+                  {est.titulo}
+                </h2>
+                <p className="mx-auto mt-4 max-w-md text-[14.5px] leading-relaxed text-ink/50">
+                  {est.resumen}
+                </p>
+              </div>
 
-            <h2 className="display mt-7 text-[clamp(1.7rem,3.4vw,2.2rem)] leading-tight">
-              Recibimos tu solicitud.
-            </h2>
-            <p className="mt-4 max-w-md text-[15px] leading-relaxed text-ink/50">
-              Estamos analizando lo que nos describiste para prepararte una cotización
-              estimada. Te llega por correo en menos de 24 horas hábiles.
-            </p>
-            <p className="label-mono mt-8 text-ink/30">Revisa también tu bandeja de spam</p>
-          </div>
+              <div className="bg-contrast px-6 py-8 text-center text-on-contrast sm:px-10">
+                <span className="label-mono text-on-contrast/40">Inversión estimada</span>
+                <p className="mt-3.5 text-[clamp(1.9rem,5vw,2.9rem)] leading-none font-medium tracking-[-0.035em] tabular-nums">
+                  {est.precio}
+                </p>
+                <p className="mt-3 text-[13.5px] text-on-contrast/55">
+                  MXN · Tiempo estimado: {est.tiempo}
+                </p>
+              </div>
+
+              <div className="border-t border-line px-6 py-7 sm:px-10">
+                <span className="label-mono text-ink/35">Incluye</span>
+                <ul className="mt-4 flex flex-col gap-2.5">
+                  {est.alcance.map((punto) => (
+                    <li key={punto} className="flex gap-3.5 text-[14px] leading-relaxed text-ink/65">
+                      <span aria-hidden="true" className="mt-[9px] h-px w-3.5 shrink-0 bg-ink/25" />
+                      {punto}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="flex flex-col gap-4 border-t border-line px-6 py-7 sm:flex-row sm:items-center sm:justify-between sm:px-10">
+                <p className="max-w-[22ch] text-[12.5px] leading-relaxed text-ink/40">
+                  Te la mandamos también por correo. Si ajustamos el alcance, el precio se mueve.
+                </p>
+                <div className="flex flex-wrap gap-2.5">
+                  {est.whatsapp ? (
+                    <a
+                      href={est.whatsapp}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex h-12 items-center justify-center rounded-full bg-ink px-6 text-[14.5px] font-medium text-paper shadow-pill transition-all duration-500 ease-premium hover:-translate-y-0.5 hover:shadow-pill-lift"
+                    >
+                      Platicarlo por WhatsApp
+                    </a>
+                  ) : null}
+                  <a
+                    href={est.url}
+                    className="inline-flex h-12 items-center justify-center rounded-full border border-line-strong px-6 text-[14.5px] text-ink transition-colors duration-300 hover:border-ink/35"
+                  >
+                    Ver completa
+                  </a>
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="flex flex-col items-center px-6 py-16 text-center sm:px-10">
+              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-ink">
+                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
+                  <path
+                    d="M5 12.5l4.5 4.5L19 7.5"
+                    stroke="var(--paper)"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
+              <h2 className="display mt-7 text-[clamp(1.7rem,3.4vw,2.2rem)] leading-tight">
+                Recibimos tu solicitud.
+              </h2>
+              <p className="mt-4 max-w-md text-[15px] leading-relaxed text-ink/50">
+                Estamos preparando tu cotización estimada. Te llega por correo en unos minutos.
+              </p>
+              <p className="label-mono mt-8 text-ink/30">Revisa también tu bandeja de spam</p>
+            </div>
+          )}
         </Window>
       </motion.div>
     );
@@ -222,8 +283,7 @@ export function QuoteForm() {
 
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="max-w-xs text-[12.5px] leading-relaxed text-ink/35">
-            Recibirás una estimación, no un precio cerrado. El costo final se define contigo. Al
-            enviar aceptas el{" "}
+            La ves al instante. Es una estimación, no un precio cerrado. Al enviar aceptas el{" "}
             <Link
               href="/privacidad"
               className="text-ink/60 underline underline-offset-2 transition-colors duration-300 hover:text-ink"
@@ -238,7 +298,7 @@ export function QuoteForm() {
             disabled={pendiente}
             className="group/btn inline-flex h-12 items-center justify-center gap-2 rounded-full bg-ink px-7 text-[15px] font-medium text-paper shadow-pill transition-all duration-500 ease-premium hover:-translate-y-0.5 hover:shadow-pill-lift disabled:pointer-events-none disabled:opacity-55"
           >
-            {pendiente ? "Enviando…" : "Solicitar cotización"}
+            {pendiente ? "Calculando…" : "Ver mi cotización"}
             {!pendiente ? (
               <span
                 aria-hidden="true"

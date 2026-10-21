@@ -2,22 +2,38 @@
 
 import { headers } from "next/headers";
 import { after } from "next/server";
-import { avisarInterno, correoConfigurado, enviarAcuse } from "@/lib/email/send";
-import { generarCotizacion } from "@/lib/quotes/generate";
+import { avisarInterno, correoConfigurado, enviarAcuse, enviarCotizacion } from "@/lib/email/send";
+import { generarCotizacion, iaConfigurada } from "@/lib/quotes/generate";
+import { formatoMXN } from "@/lib/quotes/rate-card";
 import {
+  actualizarCotizacion,
   crearSolicitud,
   guardarCotizacion,
   marcarEstado,
   solicitudesUltimaHora,
+  type Cotizacion,
   type Solicitud,
 } from "@/lib/quotes/repo";
 import { solicitudSchema } from "@/lib/quotes/schemas";
-import { site } from "@/lib/site";
+import { site, urlCotizacion } from "@/lib/site";
+import { enlaceWhatsApp, enviarWhatsApp, mensajeParaCliente } from "@/lib/whatsapp";
+
+/** Lo que la pantalla de éxito necesita para mostrar la estimación al vuelo. */
+export type Estimacion = {
+  titulo: string;
+  resumen: string;
+  precio: string;
+  tiempo: string;
+  alcance: string[];
+  url: string;
+  whatsapp: string;
+};
 
 export type EstadoFormulario = {
   ok: boolean;
   mensaje?: string;
   errores?: Record<string, string>;
+  estimacion?: Estimacion;
 } | null;
 
 const LIMITE_POR_HORA = 3;
@@ -31,18 +47,52 @@ async function datosPeticion() {
   };
 }
 
-/** Trabajo posterior a la respuesta: el cliente no espera a la IA ni al correo. */
-function procesarEnSegundoPlano(solicitud: Solicitud) {
+/**
+ * Envío al cliente, después de responderle a la pantalla.
+ *
+ * Va en `after()` para que nadie espere a que Resend y Meta contesten: la
+ * estimación ya se mostró en pantalla, esto solo la hace llegar a su bandeja
+ * y a su teléfono.
+ */
+function entregar(solicitud: Solicitud, cotizacion: Cotizacion) {
   after(async () => {
+    let entregada = false;
+
     if (correoConfigurado()) {
       try {
-        await enviarAcuse(solicitud);
-        await avisarInterno(solicitud);
+        await enviarCotizacion(solicitud, cotizacion);
+        entregada = true;
       } catch (error) {
-        console.error("[cotizar] fallo al enviar acuse:", error);
+        console.error("[cotizar] fallo al enviar la cotización:", error);
+        // Si la cotización no salió, al menos que no reciba silencio.
+        await enviarAcuse(solicitud).catch(() => {});
       }
     }
 
+    try {
+      const wa = await enviarWhatsApp(solicitud, cotizacion);
+      if (!wa.enviado && wa.motivo !== "sin credenciales") {
+        console.error("[cotizar] WhatsApp no salió:", wa.motivo);
+      }
+    } catch (error) {
+      console.error("[cotizar] fallo al enviar WhatsApp:", error);
+    }
+
+    if (correoConfigurado()) {
+      await avisarInterno(solicitud, cotizacion).catch(() => {});
+    }
+
+    await marcarEstado(solicitud.id, entregada ? "enviada" : "borrador").catch(() => {});
+  });
+}
+
+/** Trabajo diferido cuando la cotización no se pudo armar en el momento. */
+function generarDespues(solicitud: Solicitud) {
+  after(async () => {
+    if (correoConfigurado()) {
+      await enviarAcuse(solicitud).catch(() => {});
+      await avisarInterno(solicitud).catch(() => {});
+    }
     try {
       await marcarEstado(solicitud.id, "generando");
       const { cotizacion, modelo } = await generarCotizacion({
@@ -52,12 +102,16 @@ function procesarEnSegundoPlano(solicitud: Solicitud) {
         servicioOtro: solicitud.servicio_otro,
         descripcion: solicitud.descripcion,
       });
-      await guardarCotizacion(solicitud.id, cotizacion, modelo);
-      await marcarEstado(solicitud.id, "borrador", null);
+      const recien = await guardarCotizacion(solicitud.id, cotizacion, modelo);
+      const guardada = await actualizarCotizacion(recien.id, {
+        estado: "enviada",
+        enviada_at: new Date().toISOString(),
+      });
+      if (correoConfigurado()) await enviarCotizacion(solicitud, guardada);
+      await marcarEstado(solicitud.id, "enviada", null);
     } catch (error) {
       const mensaje = error instanceof Error ? error.message : String(error);
       console.error("[cotizar] fallo al generar cotización:", mensaje);
-      // Vuelve a "nueva" para que el panel permita reintentar a mano.
       await marcarEstado(solicitud.id, "nueva", mensaje).catch(() => {});
     }
   });
@@ -101,8 +155,7 @@ export async function enviarSolicitud(
     if (recientes.porCorreo >= LIMITE_POR_HORA || recientes.porIp >= LIMITE_POR_HORA) {
       return {
         ok: false,
-        mensaje:
-          `Ya recibimos varias solicitudes tuyas en la última hora. Escríbenos directo a ${site.email} y lo vemos ahí.`,
+        mensaje: `Ya recibimos varias solicitudes tuyas en la última hora. Escríbenos directo a ${site.email} y lo vemos ahí.`,
       };
     }
 
@@ -118,15 +171,55 @@ export async function enviarSolicitud(
       userAgent,
     });
 
-    procesarEnSegundoPlano(solicitud);
+    /*
+     * Con plantilla la cotización es cálculo puro y sale en milisegundos, así
+     * que se arma aquí mismo y el cliente la ve en pantalla sin esperar nada.
+     * Con IA de por medio hay una llamada de varios segundos: ahí sí conviene
+     * responder primero y entregar después.
+     */
+    if (!iaConfigurada()) {
+      const { cotizacion, modelo } = await generarCotizacion({
+        nombre: solicitud.nombre,
+        empresa: solicitud.empresa,
+        servicio: solicitud.servicio,
+        servicioOtro: solicitud.servicio_otro,
+        descripcion: solicitud.descripcion,
+      });
+      /*
+       * Se marca enviada antes de responder: el enlace se enseña en pantalla
+       * de inmediato, y la página pública oculta los borradores. Si esperara
+       * al correo, el cliente podría abrirlo y encontrarse un 404.
+       */
+      const guardada = await actualizarCotizacion(
+        (await guardarCotizacion(solicitud.id, cotizacion, modelo)).id,
+        { estado: "enviada", enviada_at: new Date().toISOString() },
+      );
+      entregar(solicitud, guardada);
 
+      return {
+        ok: true,
+        estimacion: {
+          titulo: guardada.titulo,
+          resumen: guardada.resumen,
+          precio: `${formatoMXN(Number(guardada.precio_min))} – ${formatoMXN(Number(guardada.precio_max))}`,
+          tiempo: guardada.tiempo_estimado,
+          alcance: guardada.alcance.slice(0, 4),
+          url: urlCotizacion(guardada.token),
+          whatsapp: enlaceWhatsApp(
+            process.env.WHATSAPP_NEGOCIO || site.celular,
+            mensajeParaCliente(solicitud, guardada),
+          ),
+        },
+      };
+    }
+
+    generarDespues(solicitud);
     return { ok: true };
   } catch (error) {
     console.error("[cotizar] error al registrar solicitud:", error);
     return {
       ok: false,
-      mensaje:
-        `No pudimos registrar tu solicitud. Inténtalo de nuevo en un momento o escríbenos a ${site.email}.`,
+      mensaje: `No pudimos registrar tu solicitud. Inténtalo de nuevo en un momento o escríbenos a ${site.email}.`,
     };
   }
 }

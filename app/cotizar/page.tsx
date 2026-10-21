@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 const GARANTIAS = [
-  { titulo: "Respuesta en 24 h", detalle: "Revisamos cada solicitud a mano antes de enviarte nada." },
+  { titulo: "La ves al instante", detalle: "Nada de esperar días: el precio aparece en cuanto envías." },
   { titulo: "Estimación, no factura", detalle: "Un rango realista para que sepas de qué tamaño es el proyecto." },
   { titulo: "Sin compromiso", detalle: "Si no encaja, te lo decimos y te orientamos igual." },
 ];
@@ -42,8 +42,8 @@ export default function CotizarPage() {
 
           <Reveal delay={0.14}>
             <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-ink/45 sm:text-base">
-              Analizamos tu solicitud y te devolvemos una cotización con alcance, conceptos
-              incluidos, precio estimado y tiempo de desarrollo.
+              Respondes cinco campos y ves tu cotización en pantalla: alcance, conceptos
+              incluidos, precio estimado y tiempo de desarrollo. También te llega por correo.
             </p>
           </Reveal>
 

@@ -7,6 +7,7 @@ import { Window } from "@/components/ui/Window";
 import { AVISO_ESTIMACION, formatoMXN, servicioPorId } from "@/lib/quotes/rate-card";
 import { obtenerPorToken } from "@/lib/quotes/repo";
 import { mailto, site } from "@/lib/site";
+import { enlaceWhatsApp, mensajeParaCliente } from "@/lib/whatsapp";
 
 export const metadata: Metadata = {
   title: "Cotización estimada",
@@ -43,6 +44,13 @@ export default async function CotizacionPage({ params }: { params: Promise<{ tok
 
   const { cotizacion, solicitud } = registro;
   const servicio = solicitud?.servicio_otro || servicioPorId(cotizacion.servicio).label;
+  // El cliente abre WhatsApp con el mensaje ya escrito: un paso menos.
+  const whatsapp = solicitud
+    ? enlaceWhatsApp(
+        process.env.WHATSAPP_NEGOCIO || site.celular,
+        mensajeParaCliente(solicitud, cotizacion),
+      )
+    : "";
 
   return (
     <>
@@ -151,15 +159,27 @@ export default async function CotizacionPage({ params }: { params: Promise<{ tok
             </Bloque>
 
             <div className="flex flex-col gap-5 border-t border-line px-6 py-9 sm:flex-row sm:items-center sm:justify-between sm:px-10">
-              <p className="max-w-sm text-[13px] leading-relaxed text-ink/40">
+              <p className="max-w-xs text-[13px] leading-relaxed text-ink/40">
                 {AVISO_ESTIMACION}
               </p>
-              <a
-                href={mailto}
-                className="inline-flex h-12 shrink-0 items-center justify-center rounded-full bg-ink px-7 text-[15px] font-medium text-paper shadow-pill transition-all duration-500 ease-premium hover:-translate-y-0.5 hover:shadow-pill-lift"
-              >
-                Agendar llamada
-              </a>
+              <div className="flex shrink-0 flex-wrap gap-2.5">
+                {whatsapp ? (
+                  <a
+                    href={whatsapp}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex h-12 items-center justify-center rounded-full bg-ink px-7 text-[15px] font-medium text-paper shadow-pill transition-all duration-500 ease-premium hover:-translate-y-0.5 hover:shadow-pill-lift"
+                  >
+                    Platicarlo por WhatsApp
+                  </a>
+                ) : null}
+                <a
+                  href={mailto}
+                  className="inline-flex h-12 items-center justify-center rounded-full border border-line-strong px-6 text-[15px] text-ink transition-colors duration-300 hover:border-ink/35"
+                >
+                  Escribir por correo
+                </a>
+              </div>
             </div>
           </Window>
 

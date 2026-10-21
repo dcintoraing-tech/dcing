@@ -26,7 +26,7 @@ export const SERVICIOS: Servicio[] = [
     id: "sitio-web",
     label: "Sitio web / landing",
     descripcion: "Sitio institucional, landing de campaña o catálogo sin carrito.",
-    min: 8000,
+    min: 4000,
     max: 25000,
     tiempo: "1 a 3 semanas",
   },

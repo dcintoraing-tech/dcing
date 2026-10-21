@@ -18,7 +18,6 @@ import {
   obtenerSolicitud,
 } from "@/lib/quotes/repo";
 import { cotizacionEditSchema } from "@/lib/quotes/schemas";
-import { urlCotizacion } from "@/lib/site";
 
 export type EstadoAcceso = { error?: string } | null;
 export type EstadoPanel = { ok?: boolean; mensaje?: string; error?: string } | null;
@@ -140,7 +139,7 @@ export async function guardarCotizacionEditada(
     const registro = await obtenerSolicitud(solicitudId);
     if (!registro) return { error: "Solicitud no encontrada." };
 
-    await enviarCotizacion(registro.solicitud, actualizada, urlCotizacion(actualizada.token));
+    await enviarCotizacion(registro.solicitud, actualizada);
 
     await actualizarCotizacion(cotizacionId, {
       estado: "enviada",

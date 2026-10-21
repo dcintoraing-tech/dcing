@@ -181,9 +181,20 @@ const BLOQUES: Record<ServicioId, Bloque> = {
 
 const redondea = (valor: number) => Math.round(valor / 500) * 500;
 
+/**
+ * Busca la palabra como palabra, no como trozo.
+ *
+ * Con `includes` bastaba que apareciera dentro de otra: "precios" activaba
+ * "ios" y subía el presupuesto de una página sencilla sin motivo.
+ */
+function mencion(texto: string, palabra: string) {
+  const limpia = palabra.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`(^|[^a-záéíóúüñ])${limpia}($|[^a-záéíóúüñ])`, "i").test(texto);
+}
+
 function detectaSenales(texto: string) {
   const plano = texto.toLowerCase();
-  return SENALES.filter((senal) => senal.palabras.some((palabra) => plano.includes(palabra)));
+  return SENALES.filter((senal) => senal.palabras.some((palabra) => mencion(plano, palabra)));
 }
 
 /** Rangos donde una descripción cargada de señales ya no cabe. */
@@ -224,7 +235,9 @@ export function cotizacionDePlantilla(datos: DatosSolicitud): CotizacionIA {
   // Posición dentro del rango: más señales de complejidad, más arriba.
   const razon = Math.min(1, senales.length / 5);
   const ancho = servicio.max - servicio.min;
-  const centro = servicio.min + ancho * (0.18 + 0.62 * razon);
+  // Arranca bajo a propósito: un proyecto sin señales de complejidad debe
+  // caer en el piso de la tarifa, que es el precio con el que se anuncia.
+  const centro = servicio.min + ancho * (0.12 + 0.62 * razon);
   // Una descripción vaga merece una banda más amplia, no un número falso.
   const banda = ancho * (detallada ? 0.2 : 0.32);
 
